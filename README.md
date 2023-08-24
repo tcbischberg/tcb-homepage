@@ -14,8 +14,7 @@ directives](https://docs.astro.build/en/reference/directives-reference/#custom-c
 which makes it possible to have components that only hydrate in Tina's visual 
 editor.
 
-This demo uses the following directive (there's probably a better way to detect 
-the visual editor context, though I don't know how):
+This demo uses the following directive:
 
 ```mjs
 /**
@@ -23,9 +22,14 @@ the visual editor context, though I don't know how):
  * @type {import('astro').ClientDirective}
  */
 export default (load, opts, el) => {
-  const isEditor = window.top.location.pathname.startsWith('/admin')
-  if (isEditor) {
-    load().then(hydrate => hydrate())
+  try {
+    const isEditor =
+      window.frameElement && window.frameElement.id === 'tina-iframe'
+    if (isEditor) {
+      load().then((hydrate) => hydrate())
+    }
+  } catch (e) {
+    console.error(e)
   }
 }
 ```
