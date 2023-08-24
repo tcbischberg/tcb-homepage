@@ -5,7 +5,7 @@ npm run dev
 ```
 
 To see the Tina preview, visit 
-[http://localhost:3000/admin/index.html](http://localhost:3000/admin/index.html).
+[http://localhost:3000/admin/index.html#/~](http://localhost:3000/admin/index.html#/~).
 
 ## How?
 

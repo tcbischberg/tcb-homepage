@@ -23,6 +23,13 @@ export default defineStaticConfig({
         name: "post",
         label: "Posts",
         path: "content/posts",
+        ui: {
+          allowedActions: {
+            create: false,
+            delete: false,
+          },
+          router: () => '/',
+        },
         fields: [
           {
             type: "string",
