@@ -1,0 +1,21 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { client } from '../../../../.tina/__generated__/client';
+import Layout from '../../../layouts/Layout.astro';
+import Review from '../../../components/Review';
+
+export const getStaticPaths = (async () => {
+  const response = await client.queries.reviewConnection();
+  return (
+    response.data.reviewConnection.edges?.map((edge) => {
+      return { params: { filename: edge?.node?._sys?.filename, year: edge?.node?.year } };
+    }) ?? []
+  );
+}) satisfies GetStaticPaths;
+
+const { year } = Astro.params;
+
+const response = await client.queries.review({ relativePath: `${year}.md` });
+---
+
+<Layout><Review client:tina {...response} /></Layout>

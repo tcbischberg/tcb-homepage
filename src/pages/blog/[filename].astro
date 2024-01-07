@@ -1,0 +1,21 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { client } from '../../../.tina/__generated__/client';
+import Layout from '../../layouts/Layout.astro';
+import Article from '../../components/Article';
+
+export const getStaticPaths = (async () => {
+  const response = await client.queries.articleConnection();
+  return (
+    response.data.articleConnection.edges?.map((edge) => {
+      return { params: { filename: edge?.node?._sys?.filename, slug: edge?.node?._sys.slug } };
+    }) ?? []
+  );
+}) satisfies GetStaticPaths;
+
+const { filename } = Astro.params;
+
+const response = await client.queries.article({ relativePath: `${filename}.md` });
+---
+
+<Layout><Article client:tina {...response} /></Layout>
