@@ -96,6 +96,20 @@ export default defineStaticConfig({
           },
         ],
       },
+      {
+        name: 'static',
+        label: 'Statische Seiten',
+        path: 'content/static',
+        fields: [
+          {
+            type: 'rich-text',
+            name: 'body',
+            label: 'Body',
+            isBody: true,
+          
+          }
+        ]
+      }
     ],
   },
 });

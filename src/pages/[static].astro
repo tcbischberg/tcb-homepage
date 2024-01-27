@@ -1,0 +1,22 @@
+---
+import client from '../../.tina/__generated__/client';
+import Static from '../components/Static';
+
+export const getStaticPaths = async () => {
+  const response = await client.queries.staticConnection();
+
+  return response.data.staticConnection.edges?.map((edge) => ({
+    params: {
+      relativePath: edge?.node?._sys.filename,
+    },
+  }));
+};
+
+const filename = Astro.params;
+
+const response = await client.queries.static({
+  relativePath: `${filename}.md`,
+});
+---
+
+<Static client:tina {...response} />

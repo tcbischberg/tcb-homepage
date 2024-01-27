@@ -90,6 +90,19 @@ var config_default = defineStaticConfig({
             isBody: true
           }
         ]
+      },
+      {
+        name: "static",
+        label: "Statische Seiten",
+        path: "content/static",
+        fields: [
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true
+          }
+        ]
       }
     ]
   }
