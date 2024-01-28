@@ -3,7 +3,7 @@ import Navigation from './Navigation.astro';
 ---
 
 <header>
-  <nav class="navbar">
+  <nav class="navbar nav-dropdown-container">
     <a href="/" class="h-auto w-16 min-w-fit"
       ><img class="max-w-[15vmin]" src="/assets/logo.svg" alt="Logo FC Bischberg" loading="eager" /></a
     >
@@ -49,3 +49,22 @@ import Navigation from './Navigation.astro';
     }
   }
 </style>
+
+<script lang="js">
+  var nav = document.querySelector('.nav-dropdown-container');
+  nav.addEventListener(
+    'toggle',
+    function (event) {
+      // Only run if the dropdown is open
+      if (!event.target.open) return;
+
+      // Get all other open dropdowns and close them
+      var dropdowns = nav.querySelectorAll('.nav-dropdown[open]');
+      Array.prototype.forEach.call(dropdowns, function (dropdown) {
+        if (dropdown === event.target) return;
+        dropdown.removeAttribute('open');
+      });
+    },
+    true
+  );
+</script>

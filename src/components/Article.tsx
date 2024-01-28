@@ -1,8 +1,15 @@
 import { useTina } from 'tinacms/dist/react';
 import { TinaMarkdown } from 'tinacms/dist/rich-text';
+import type { ArticleQuery } from '../../tina/__generated__/types';
 
-export default function Review(props: { query: string; variables: object; data: { article: { body?: any } } }) {
+export default function Article(props: { query: string; variables: object; data: ArticleQuery }) {
   const { data } = useTina(props);
 
-  return <TinaMarkdown content={data?.article?.body ?? []} />;
+  return (
+    <div className="article">
+      <div className="text-center">{new Date(data.article.createdAt).toLocaleDateString('de')}</div>
+      <TinaMarkdown content={data?.article?.body ?? []} />
+      <hr />
+    </div>
+  );
 }

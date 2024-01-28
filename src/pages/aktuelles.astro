@@ -1,0 +1,22 @@
+---
+import client from '../../tina/__generated__/client';
+import Article from '../components/Article';
+import Layout from '../layouts/Layout.astro';
+
+const articleConnection = await client.queries.articleConnection({
+  sort: 'createdAt',
+  last: 3,
+});
+
+const articles = await Promise.all(
+  articleConnection.data.articleConnection.edges
+    ?.map((edge) => edge?.node)
+    .map((node) => client.queries.article({ relativePath: node?._sys.relativePath ?? '' })) ?? []
+);
+---
+
+<Layout
+  >{articles.map((article) => <Article client:tina {...article} />)}<div class="mt-4 text-center italic text-2xl">
+    Alle älteren Artikel befinden sich in den <a href="/archiv/rueckblicke">Jahresrückblicken</a>.
+  </div></Layout
+>

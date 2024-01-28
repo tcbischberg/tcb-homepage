@@ -24,10 +24,6 @@ export default defineStaticConfig({
         label: 'Artikel',
         path: 'content/articles',
         ui: {
-          filename: {
-            readonly: true,
-            slugify: ({ slug }) => slug,
-          },
           router: ({ document }) => '/blog/' + document._sys.filename,
           beforeSubmit: async ({ values }: { form: Form; cms: TinaCMS; values: Record<string, any> }) => {
             return {
@@ -42,6 +38,15 @@ export default defineStaticConfig({
           },
         },
         fields: [
+          {
+            type: 'datetime',
+            name: 'createdAt',
+            label: 'Erstellt am',
+            ui: {
+              dateFormat: 'DD.MM.yyyy',
+            },
+            required: true,
+          },
           {
             type: 'string',
             name: 'title',
