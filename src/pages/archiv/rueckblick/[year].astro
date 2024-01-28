@@ -1,0 +1,109 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { client } from '../../../../tina/__generated__/client';
+import Layout from '../../../layouts/Layout.astro';
+import Article from '../../../components/Article';
+
+export const getStaticPaths = (async () => {
+  const response = await client.queries.articleConnection();
+  const years = [
+    ...new Set(
+      response.data.articleConnection.edges?.map((edge) => new Date(edge?.node?.createdAt ?? '').getFullYear()) ?? []
+    ),
+  ].sort((a, b) => b - a);
+
+  return years.map((year) => year.toString()).map((year) => ({ params: { relativePath: year, year } }));
+}) satisfies GetStaticPaths;
+
+const { year: yearString } = Astro.params;
+
+const year = parseInt(yearString);
+
+const response = await client.queries.articleConnection();
+const availableYears = [
+  ...new Set(
+    response.data.articleConnection.edges?.map((edge) => new Date(edge?.node?.createdAt ?? '').getFullYear()) ?? []
+  ),
+].sort((a, b) => b - a);
+
+const articleConnection = await client.queries.articleConnection({
+  sort: 'createdAt',
+  last: 1_000_000, // HINT: Hacky, because I can't figure out how to sort descending
+});
+
+const articles = await Promise.all(
+  articleConnection.data.articleConnection.edges
+    ?.map((edge) => edge?.node)
+    .filter((node) => new Date(node?.createdAt ?? '').getFullYear() === year)
+    .map((node) => client.queries.article({ relativePath: node?._sys.relativePath ?? '' })) ?? []
+);
+---
+
+<Layout
+  ><h1>
+    Der TC Bischberg<ul class="menu menu-horizontal rounded-box text-5xl">
+      <li>
+        <details>
+          <summary>{year}</summary>
+          <ul>
+            {
+              availableYears.map((availableYear) => (
+                <li>
+                  <a
+                    class:list={[
+                      'text-center',
+                      year === availableYear && 'pointer-events-none',
+                      year === availableYear && 'text-blue',
+                      year !== availableYear && 'font-bold',
+                    ]}
+                    href={`${availableYear}`}
+                  >
+                    {availableYear}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </details>
+      </li>
+    </ul>
+  </h1>
+  {articles.map((article) => <Article client:tina {...article} />)}{
+    !articles.length && (
+      <div class="mt-4 text-center italic text-2xl">Dieses Jahr wurden noch keine Artikel veröffentlicht.</div>
+    )
+  }</Layout
+>
+
+<style is:global>
+  astro-island:last-of-type > .article > hr {
+    display: none;
+  }
+</style>
+
+<style>
+  ul.menu {
+    padding-inline: 0;
+    margin-block: 0;
+  }
+
+  ul.menu > li {
+    margin-block: 0;
+  }
+
+  ul.menu ul {
+    padding-inline: 0;
+    margin-block: 0;
+    right: 0;
+  }
+
+  ul.menu ul > li {
+    margin-block: 0;
+    padding: 0;
+  }
+
+  ul.menu ul > li > a {
+    text-decoration: none;
+    display: block;
+  }
+</style>

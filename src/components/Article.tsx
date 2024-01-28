@@ -8,6 +8,7 @@ export default function Article(props: { query: string; variables: object; data:
   return (
     <div className="article">
       <div className="text-center">{new Date(data.article.createdAt).toLocaleDateString('de')}</div>
+      <h2>{data.article.title}</h2>
       <TinaMarkdown content={data?.article?.body ?? []} />
       <hr />
     </div>

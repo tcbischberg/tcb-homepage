@@ -1,6 +1,6 @@
 ---
 import client from '../../../tina/__generated__/client';
-import Static from '../../components/Static';
+import Article from '../../components/Article';
 import Layout from '../../layouts/Layout.astro';
 
 export const getStaticPaths = async () => {
@@ -26,5 +26,5 @@ const response = await client.queries.article({
 ---
 
 <Layout>
-  <Static client:tina {...response} />
+  <Article client:tina {...response} />
 </Layout>

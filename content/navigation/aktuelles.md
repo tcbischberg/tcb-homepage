@@ -1,7 +1,7 @@
 ---
 name: Aktuelles
 label: Aktuelles
-link: aktuelles
+link: /aktuelles
 order: 1
 ---
 
