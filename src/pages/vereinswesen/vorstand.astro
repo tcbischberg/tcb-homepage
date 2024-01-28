@@ -1,0 +1,88 @@
+---
+import client from '../../../tina/__generated__/client';
+import Layout from '../../layouts/Layout.astro';
+
+const boardConnection = await client.queries.boardConnection();
+
+const mainBoard = ['erster_vorstand', 'zweiter_vorstand', 'dritter_vorstand'].map((role) => role + '.md');
+
+const mainBoardMembers =
+  boardConnection.data.boardConnection.edges
+    ?.map((edge) => edge?.node)
+    .filter((node) => node?._sys.basename && mainBoard.includes(node?._sys.basename))
+    .filter(Boolean) ?? [];
+
+const sortedMainBoardMembers = mainBoard.map((role) =>
+  mainBoardMembers.find((member) => member?._sys.basename === role)
+);
+
+const otherBoardMembers =
+  boardConnection.data.boardConnection.edges
+    ?.map((edge) => edge?.node)
+    .filter((node) => node?._sys.basename && !mainBoard.includes(node?._sys.basename))
+    .filter(Boolean) ?? [];
+
+otherBoardMembers.sort((a, b) => {
+  if (a?.position && b?.position) {
+    return a.position.localeCompare(b.position);
+  }
+  return 0;
+});
+
+function getPhoneNumberHref(phoneNumber: string) {
+  return 'tel:' + phoneNumber.replace(/ /g, '');
+}
+---
+
+<Layout>
+  <h1 class="content__title">Unser Vorstand</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 text-center gap-8">
+    {
+      sortedMainBoardMembers.map((boardMember) => (
+        <div class="align-middle justify-self-center">
+          <div class="text-blue text-4xl font-bold">{boardMember?.position}</div>
+          <address>
+            <div class="board-member__name">{boardMember?.name}</div>
+            <div class="board-member__phone">
+              <a href={getPhoneNumberHref(boardMember?.phone ?? '')}>{boardMember?.phone}</a>
+            </div>
+            {boardMember?.address && (
+              <>
+                <div class="board-member__address">{boardMember?.address?.street}</div>
+                <div class="board-member__city">
+                  {boardMember?.address?.zip}&nbsp;{boardMember?.address?.city}
+                </div>
+              </>
+            )}
+            {boardMember?.email && <a href={'mailto:' + boardMember?.email ?? ''}>Email</a>}
+          </address>
+        </div>
+      ))
+    }
+  </div>
+  <h2 class="content__title">Der erweiterte Vorstand</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 text-center gap-8">
+    {
+      otherBoardMembers.map((boardMember) => (
+        <div class="align-middle justify-self-center">
+          <div class="text-blue text-3xl font-bold">{boardMember?.position}</div>
+          <address>
+            <div class="board-member__name">{boardMember?.name}</div>
+            <div class="board-member__phone">
+              <a href={getPhoneNumberHref(boardMember?.phone ?? '')}>{boardMember?.phone}</a>
+            </div>
+            {boardMember?.address && (
+              <>
+                <div class="board-member__address">{boardMember?.address?.street}</div>
+                <div class="board-member__city">
+                  {boardMember?.address?.zip}&nbsp;{boardMember?.address?.city}
+                </div>
+              </>
+            )}
+            {boardMember?.email && <a href={'mailto:' + boardMember?.email ?? ''}>Email</a>}
+          </address>
+        </div>
+      ))
+    }
+  </div>
+</Layout>

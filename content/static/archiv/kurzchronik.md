@@ -1,7 +1,3 @@
----
-layout: ../../layouts/Layout.astro
----
-
 # Kurzchronik
 
 Der TC Blau-Weiß 1980 Bischberg e.V. wurde am 29.7.1980 gegründet

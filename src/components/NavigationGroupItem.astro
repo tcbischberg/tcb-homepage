@@ -1,24 +1,20 @@
 ---
-import type { Props as NavigationItemProps } from "./NavigationItem.astro";
-import NavigationItem from "./NavigationItem.astro";
+import type { Props as NavigationItemProps } from './NavigationItem.astro';
+import NavigationItem from './NavigationItem.astro';
 
 export type Props = {
-  prefix: string;
-  title: string;
+  link: string;
+  label: string;
   items: NavigationItemProps[];
 };
-const { prefix, title, items } = Astro.props as Props;
+const { label, link, items } = Astro.props as Props;
 ---
 
 <li>
   <details>
-    <summary class="w-max">{title}</summary>
-    <ul class="z-10 p-2 text-lg">
-      {
-        items.map((item) => (
-          <NavigationItem {...item} path={`${prefix}/${item.path}`} />
-        ))
-      }
+    <summary class="w-max">{label}</summary>
+    <ul class="z-10 p-2 text-lg right-0 justify-end">
+      {items.map((item) => <NavigationItem {...item} link={`${link}/${item.link}`} />)}
     </ul>
   </details>
 </li>

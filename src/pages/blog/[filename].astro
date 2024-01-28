@@ -1,6 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { client } from '../../../.tina/__generated__/client';
+import { client } from '../../../tina/__generated__/client';
 import Layout from '../../layouts/Layout.astro';
 import Article from '../../components/Article';
 
@@ -8,7 +8,7 @@ export const getStaticPaths = (async () => {
   const response = await client.queries.articleConnection();
   return (
     response.data.articleConnection.edges?.map((edge) => {
-      return { params: { filename: edge?.node?._sys?.filename, slug: edge?.node?._sys.slug } };
+      return { params: { filename: edge?.node?._sys?.filename, relativePath: edge?.node?.slug ?? '' } };
     }) ?? []
   );
 }) satisfies GetStaticPaths;

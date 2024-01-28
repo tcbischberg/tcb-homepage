@@ -1,14 +1,36 @@
 ---
-import NavigationItem from "./NavigationItem.astro";
-import NavigationGroupItem from "./NavigationGroupItem.astro";
+import NavigationItem from './NavigationItem.astro';
+import NavigationGroupItem from './NavigationGroupItem.astro';
+import client from '../../tina/__generated__/client';
+
+const navigationConnection = await client.queries.navigationConnection();
+
+const navigationFilenames =
+  navigationConnection.data.navigationConnection.edges
+    ?.map((edge) => ({
+      filename: edge?.node?._sys?.basename,
+    }))
+    .filter(Boolean) ?? [];
+
+const navigationItems = await Promise.all(
+  navigationFilenames.map(async (filename) => {
+    const { data } = await client.queries.navigation({ relativePath: filename.filename ?? '' });
+    return data;
+  })
+);
+
+const sortedNavigationItems = [...navigationItems].sort((a, b) => {
+  return (a.navigation.order ?? Infinity) - (b.navigation.order ?? Infinity);
+});
 ---
 
-<NavigationItem path="/gremium" title="Gremium" />
-<NavigationItem
-  path="https://www.hc03-bamberg.de"
-  pathTarget="_blank"
-  title="Handball"
-/>
-<NavigationItem path="/volleyball" title="Volleyball" />
-<NavigationItem path="/kinderturnen" title="Kinderturnen" />
-<NavigationItem path="/frauen-fitness" title="Frauen Fitness" />
+<>
+  {
+    sortedNavigationItems.map((item) => {
+      if (!!item.navigation.subpages?.length) {
+        return <NavigationGroupItem {...item.navigation} items={item.navigation.subpages} />;
+      }
+      return <NavigationItem {...item.navigation} />;
+    })
+  }
+</>

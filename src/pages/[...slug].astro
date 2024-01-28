@@ -1,0 +1,30 @@
+---
+import client from '../../tina/__generated__/client';
+import Static from '../components/Static';
+import Layout from '../layouts/Layout.astro';
+
+export const getStaticPaths = async () => {
+  const response = await client.queries.staticConnection();
+
+  return response.data.staticConnection.edges?.map((edge) => {
+    const relativePath = edge?.node?._sys.relativePath.replace('.md', '');
+
+    return {
+      params: {
+        relativePath: relativePath === 'index' ? '/' : relativePath,
+        slug: relativePath === 'index' ? '/' : relativePath,
+      },
+    };
+  });
+};
+
+const { slug } = Astro.params;
+
+const response = await client.queries.static({
+  relativePath: `${slug === '/' ? 'index' : slug}.md`,
+});
+---
+
+<Layout>
+  <Static client:tina {...response} />
+</Layout>

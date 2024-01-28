@@ -65,34 +65,56 @@ export default defineStaticConfig({
         ],
       },
       {
-        name: 'review',
-        label: 'Rückblicke',
-        path: 'content/reviews',
-        defaultItem: () => ({
-          year: new Date().getFullYear(),
-        }),
-        ui: {
-          router: ({ document }) => '/archiv/rueckblicke/' + document._sys.filename,
-        },
+        name: 'board',
+        label: 'Vorstand',
+        path: 'content/board',
         fields: [
           {
-            type: 'number',
-            name: 'year',
-            label: 'Jahr',
+            type: 'string',
+            name: 'name',
+            label: 'Name',
             required: true,
-            ui: {
-              validate: (value: number) => {
-                if (value < 2000) {
-                  return 'Jahr muss vierstellig sein (z.B. 2024)';
-                }
-              },
-            },
           },
           {
-            type: 'rich-text',
-            name: 'body',
-            label: 'Body',
-            isBody: true,
+            type: 'string',
+            name: 'position',
+            label: 'Position',
+            required: true,
+          },
+          {
+            type: 'string',
+            name: 'email',
+            label: 'E-Mail',
+          },
+          {
+            type: 'string',
+            name: 'phone',
+            label: 'Telefon',
+          },
+          {
+            type: 'object',
+            name: 'address',
+            label: 'Adresse',
+            fields: [
+              {
+                type: 'string',
+                name: 'street',
+                label: 'Straße und Hausnummer',
+                required: true,
+              },
+              {
+                type: 'string',
+                name: 'zip',
+                label: 'PLZ',
+                required: true,
+              },
+              {
+                type: 'string',
+                name: 'city',
+                label: 'Stadt',
+                required: true,
+              },
+            ],
           },
         ],
       },
@@ -128,6 +150,53 @@ export default defineStaticConfig({
             type: 'image',
             name: 'logo',
             label: 'Logo',
+          },
+        ],
+      },
+      {
+        name: 'navigation',
+        label: 'Navigation',
+        path: 'content/navigation',
+        fields: [
+          {
+            type: 'string',
+            name: 'label',
+            label: 'Name',
+            required: true,
+          },
+          {
+            type: 'string',
+            name: 'link',
+            label: 'Link',
+            required: true,
+          },
+          {
+            type: 'number',
+            name: 'order',
+            label: 'Reihenfolge',
+          },
+          {
+            type: 'object',
+            name: 'subpages',
+            label: 'Unterseiten',
+            list: true,
+            ui: {
+              itemProps: (item) => ({ label: item.label }),
+            },
+            fields: [
+              {
+                type: 'string',
+                name: 'label',
+                label: 'Name',
+                required: true,
+              },
+              {
+                type: 'string',
+                name: 'link',
+                label: 'Link',
+                required: true,
+              },
+            ],
           },
         ],
       },

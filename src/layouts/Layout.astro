@@ -1,9 +1,9 @@
 ---
-import "../styles/global.css";
-import background from "../../public/assets/background.jpg";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
-import Drawer from "../components/Drawer.astro";
+import '../styles/global.css';
+import background from '../../public/assets/background.jpg';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Drawer from '../components/Drawer.astro';
 
 export interface Props {
   frontmatter: {
@@ -12,9 +12,7 @@ export interface Props {
   };
 }
 
-const {
-  frontmatter: { title, noBackground } = {},
-} = Astro.props || {};
+const { frontmatter: { title = '', noBackground = false } = {} } = Astro.props || {};
 ---
 
 <!doctype html>
@@ -30,8 +28,8 @@ const {
     class="drawer-content flex flex-col"
     style={{
       backgroundImage: noBackground ? undefined : `url(${background})`,
-      backgroundSize: "cover",
-      backgroundAttachment: "fixed",
+      backgroundSize: 'cover',
+      backgroundAttachment: 'fixed',
     }}
   >
     <input id="drawer" type="checkbox" class="drawer-toggle" />
@@ -54,4 +52,3 @@ const {
     }
   </style>
 </html>
-
