@@ -1,0 +1,15 @@
+---
+export type Props = {
+  title: string;
+  year?: string;
+  path: string;
+  pathTarget?: string;
+};
+const { path, pathTarget, title, year } = Astro.props as Props;
+---
+
+<li>
+  <a class="w-max" href={path} target={pathTarget}>
+    {title}{year && <>&nbsp;({year})</>}
+  </a>
+</li>

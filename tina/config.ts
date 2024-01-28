@@ -81,7 +81,7 @@ export default defineStaticConfig({
             label: 'Jahr',
             required: true,
             ui: {
-              validate: (value) => {
+              validate: (value: number) => {
                 if (value < 2000) {
                   return 'Jahr muss vierstellig sein (z.B. 2024)';
                 }
@@ -106,10 +106,31 @@ export default defineStaticConfig({
             name: 'body',
             label: 'Body',
             isBody: true,
-          
-          }
-        ]
-      }
+          },
+        ],
+      },
+      {
+        name: 'sponsor',
+        label: 'Sponsoren',
+        path: 'content/sponsors',
+        fields: [
+          {
+            type: 'string',
+            name: 'name',
+            label: 'Name',
+          },
+          {
+            type: 'string',
+            name: 'link',
+            label: 'Link',
+          },
+          {
+            type: 'image',
+            name: 'logo',
+            label: 'Logo',
+          },
+        ],
+      },
     ],
   },
 });

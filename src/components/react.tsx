@@ -1,6 +1,6 @@
 import { useTina } from 'tinacms/dist/react'
 
-export const MyComponent = (props) => {
+export const MyComponent = (props: any) => {
   const { data } = useTina(props)
 
   return (
