@@ -23,17 +23,32 @@ export default defineStaticConfig({
         name: 'article',
         label: 'Artikel',
         path: 'content/articles',
+        format: 'mdx',
         ui: {
+          filename: {
+            readonly: true,
+            slugify: (values) => {
+              return (
+                new Date(values.createdAt || new Date()).toISOString().split('T')[0] +
+                '_' +
+                (values.title ?? '')
+                  .toLowerCase()
+                  .replace(/ /g, '-')
+                  .replace(/[^\w-]+/g, '')
+              );
+            },
+          },
           router: ({ document }) => '/blog/' + document._sys.filename,
           beforeSubmit: async ({ values }: { form: Form; cms: TinaCMS; values: Record<string, any> }) => {
             return {
               ...values,
               slug:
                 values.slug ||
-                values.title
-                  .toLowerCase()
-                  .replace(/ /g, '-')
-                  .replace(/[^\w-]+/g, ''),
+                new Date(values.createdAt || new Date()).toISOString().split('T')[0] +
+                  values.title
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, ''),
             };
           },
         },
@@ -59,6 +74,20 @@ export default defineStaticConfig({
             name: 'body',
             label: 'Body',
             isBody: true,
+            templates: [
+              {
+                name: 'Carousel',
+                label: 'Bilderkarussell',
+                fields: [
+                  {
+                    list: true,
+                    type: 'image',
+                    name: 'images',
+                    label: 'Bilder',
+                  },
+                ],
+              },
+            ],
           },
           {
             type: 'string',

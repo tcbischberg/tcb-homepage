@@ -7,7 +7,7 @@ export const getStaticPaths = async () => {
   const response = await client.queries.articleConnection();
 
   return response.data.articleConnection.edges?.map((edge) => {
-    const relativePath = edge?.node?._sys.relativePath.replace('.md', '');
+    const relativePath = edge?.node?._sys.relativePath.replace('.mdx', '');
 
     return {
       params: {
@@ -21,10 +21,10 @@ export const getStaticPaths = async () => {
 const { slug } = Astro.params;
 
 const response = await client.queries.article({
-  relativePath: `${slug}.md`,
+  relativePath: `${slug}.mdx`,
 });
 ---
 
 <Layout>
-  <Article client:tina {...response} />
+ <Article client:tina {...response} />
 </Layout>
