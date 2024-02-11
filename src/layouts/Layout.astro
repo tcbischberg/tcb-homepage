@@ -22,7 +22,9 @@ const { frontmatter: { title = '', noBackground = false } = {} } = Astro.props |
     <link rel="icon" type="image/png" href="/logo.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/flickity@2/dist/flickity.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/flickity-fullscreen@2/fullscreen.css" />
+    <script src="https://unpkg.com/flickity-fullscreen@2/fullscreen.js" defer></script>
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js" defer></script>
   </head>
   <body
