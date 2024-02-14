@@ -54,7 +54,7 @@ const articles = await Promise.all(
                       'text-center',
                       year === availableYear && 'pointer-events-none',
                       year === availableYear && 'text-blue',
-                      year !== availableYear && 'font-bold',
+                      year === availableYear && 'font-bold',
                     ]}
                     href={`${availableYear}`}
                   >

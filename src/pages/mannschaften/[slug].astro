@@ -1,0 +1,52 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { client } from '../../../tina/__generated__/client';
+import Layout from '../../layouts/Layout.astro';
+import TeamNews from '../../components/TeamNews';
+
+export const getStaticPaths = (async () => {
+  const response = await client.queries.teamConnection();
+
+  const slugs = response.data.teamConnection.edges?.map((edge) => edge?.node?.slug ?? '') ?? [];
+  console.log(slugs);
+
+  return slugs.map((slug) => ({
+    params: {
+      relativePath: slug ?? '',
+      slug,
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+const currentYear = new Date().getFullYear();
+
+const teamConnection = await client.queries.teamConnection();
+const teamData = teamConnection.data.teamConnection.edges?.find((edge) => edge?.node?.slug === slug)?.node;
+
+const teamNewsConnection = await client.queries.teamNewsConnection();
+const teamNewsData =
+  teamNewsConnection.data.teamNewsConnection.edges
+    ?.filter((edge) => edge?.node?.team?.id === teamData?.id)
+    .map((edge) => edge?.node)
+    .filter(Boolean) ?? [];
+const sortedNewsByCreatedAtDesc = teamNewsData.sort((a, b) => {
+  if (a?.createdAt && b?.createdAt) {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  }
+  return 0;
+});
+const filteredNewsByYear = sortedNewsByCreatedAtDesc.filter((news) => {
+  if (news?.createdAt) {
+    return new Date(news.createdAt).getFullYear() === currentYear;
+  }
+  return false;
+});
+---
+
+<Layout>
+  <h1>{teamData?.ageGroup}</h1>
+  <h2>Neuigkeiten</h2>
+  {filteredNewsByYear?.map((teamNews) => <TeamNews query="" variables={{}} data={{ teamNews }} />)}
+  {!filteredNewsByYear?.length && <i>Noch keine Neuigkeiten für das Jahr {currentYear}</i>}
+</Layout>

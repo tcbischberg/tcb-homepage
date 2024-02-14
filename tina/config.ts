@@ -245,6 +245,17 @@ export default defineStaticConfig({
               return (values.season ?? '') + '_' + (values.ageGroup ?? '');
             },
           },
+          beforeSubmit: async ({ values }: { form: Form; cms: TinaCMS; values: Record<string, any> }) => {
+            return {
+              ...values,
+              slug:
+                values.slug ||
+                (values.ageGroup ?? '')
+                  .toLowerCase()
+                  .replace(/ /g, '')
+                  .replace(/[^\w]+/g, ''),
+            };
+          },
         },
         fields: [
           {
@@ -287,6 +298,13 @@ export default defineStaticConfig({
             type: 'string',
             name: 'phone',
             label: 'Telefon',
+          },
+          {
+            type: 'string',
+            name: 'slug',
+            label: 'Slug',
+            required: false,
+            description: 'Wird automatisch generiert',
           },
         ],
       },
