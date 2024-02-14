@@ -234,6 +234,148 @@ export default defineStaticConfig({
           },
         ],
       },
+      {
+        name: 'team',
+        label: 'Mannschaften',
+        path: 'content/teams',
+        ui: {
+          filename: {
+            readonly: true,
+            slugify: (values) => {
+              return (values.season ?? '') + '_' + (values.ageGroup ?? '');
+            },
+          },
+        },
+        fields: [
+          {
+            type: 'string',
+            name: 'ageGroup',
+            label: 'Altersklasse',
+            required: true,
+          },
+          {
+            type: 'string',
+            name: 'league',
+            label: 'Liga',
+          },
+          {
+            type: 'datetime',
+            name: 'season',
+            label: 'Saison',
+            ui: {
+              dateFormat: 'YYYY',
+              parse: (value) => value && value.format('YYYY'),
+            },
+            required: true,
+          },
+          {
+            type: 'string',
+            name: 'training',
+            label: 'Training',
+          },
+          {
+            type: 'string',
+            name: 'contact',
+            label: 'Kontakt',
+          },
+          {
+            type: 'string',
+            name: 'email',
+            label: 'E-Mail',
+          },
+          {
+            type: 'string',
+            name: 'phone',
+            label: 'Telefon',
+          },
+        ],
+      },
+      {
+        name: 'teamNews',
+        label: 'Mannschaftsnews',
+        path: 'content/team-news',
+        format: 'mdx',
+        ui: {
+          filename: {
+            readonly: true,
+            slugify: (values) => {
+              return (
+                new Date(values.createdAt || new Date()).toISOString().split('T')[0] +
+                '_' +
+                (values.title ?? '')
+                  .toLowerCase()
+                  .replace(/ /g, '-')
+                  .replace(/[^\w-]+/g, '')
+              );
+            },
+          },
+          router: ({ document }) => '/mannschafts-news/' + document._sys.filename,
+          beforeSubmit: async ({ values }: { form: Form; cms: TinaCMS; values: Record<string, any> }) => {
+            return {
+              ...values,
+              slug:
+                values.slug ||
+                new Date(values.createdAt || new Date()).toISOString().split('T')[0] +
+                  '_' +
+                  values.title
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, ''),
+            };
+          },
+        },
+        fields: [
+          {
+            type: 'datetime',
+            name: 'createdAt',
+            label: 'Erstellt am',
+            ui: {
+              dateFormat: 'DD.MM.yyyy',
+            },
+            required: true,
+          },
+          {
+            type: 'reference',
+            name: 'team',
+            label: 'Mannschaft',
+            collections: ['team'],
+          },
+          {
+            type: 'string',
+            name: 'title',
+            label: 'Title',
+            required: true,
+            isTitle: true,
+          },
+          {
+            type: 'rich-text',
+            name: 'body',
+            label: 'Body',
+            isBody: true,
+            templates: [
+              {
+                name: 'Carousel',
+                label: 'Bilderkarussell',
+                fields: [
+                  {
+                    list: true,
+                    type: 'image',
+                    name: 'images',
+                    label: 'Bilder',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'string',
+            name: 'slug',
+            label: 'Slug',
+            required: false,
+            description: 'Wird automatisch generiert',
+          },
+        ],
+      },
     ],
   },
 });

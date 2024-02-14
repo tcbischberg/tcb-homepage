@@ -1,0 +1,30 @@
+---
+import client from '../../../tina/__generated__/client';
+import TeamNews from '../../components/TeamNews';
+import Layout from '../../layouts/Layout.astro';
+
+export const getStaticPaths = async () => {
+  const response = await client.queries.teamNewsConnection();
+
+  return response.data.teamNewsConnection.edges?.map((edge) => {
+    const relativePath = edge?.node?._sys.relativePath.replace('.mdx', '');
+
+    return {
+      params: {
+        relativePath,
+        slug: relativePath,
+      },
+    };
+  });
+};
+
+const { slug } = Astro.params;
+
+const response = await client.queries.teamNews({
+  relativePath: `${slug}.mdx`,
+});
+---
+
+<Layout>
+  <TeamNews client:tina {...response} />
+</Layout>
