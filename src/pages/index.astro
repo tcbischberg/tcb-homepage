@@ -5,7 +5,7 @@ import Static from '../components/Static';
 import Layout from '../layouts/Layout.astro';
 
 const response = await client.queries.static({
-  relativePath: 'index.md',
+  relativePath: 'index.mdx',
 });
 
 const sponsorsConnection = await client.queries.sponsorConnection();

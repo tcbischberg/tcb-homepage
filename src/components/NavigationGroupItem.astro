@@ -12,7 +12,7 @@ const { label, link, items } = Astro.props as Props;
 
 <li>
   <details class="nav-dropdown">
-    <summary class="w-max">{label}</summary>
+    <summary class="w-auto">{label}</summary>
     <ul class="z-10 p-2 text-lg right-0 justify-end">
       {items.map((item) => <NavigationItem {...item} link={`${link}/${item.link}`} />)}
     </ul>

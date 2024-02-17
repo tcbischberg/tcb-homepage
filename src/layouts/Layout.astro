@@ -6,12 +6,12 @@ import Drawer from '../components/Drawer.astro';
 
 export interface Props {
   frontmatter: {
-    title: string;
+    title?: string;
     noBackground?: boolean;
   };
 }
 
-const { frontmatter: { title = '', noBackground = false } = {} } = Astro.props || {};
+const { frontmatter: { title = 'TC Bischberg', noBackground = false } = {} } = Astro.props || {};
 ---
 
 <!doctype html>

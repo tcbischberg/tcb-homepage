@@ -156,12 +156,39 @@ export default defineStaticConfig({
         name: 'static',
         label: 'Statische Seiten',
         path: 'content/static',
+        format: 'mdx',
         fields: [
           {
             type: 'rich-text',
             name: 'body',
             label: 'Body',
             isBody: true,
+            templates: [
+              {
+                name: 'Carousel',
+                label: 'Bilderkarussell',
+                fields: [
+                  {
+                    list: true,
+                    type: 'image',
+                    name: 'images',
+                    label: 'Bilder',
+                  },
+                ],
+              },
+              {
+                name: 'Directions',
+                label: 'Anfahrt',
+                fields: [
+                  {
+                    type: 'boolean',
+                    name: 'unused',
+                    label: '',
+                    description: 'Das Feld macht nichts',
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
