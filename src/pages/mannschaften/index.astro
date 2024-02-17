@@ -1,0 +1,27 @@
+---
+import { client } from '../../../tina/__generated__/client';
+import Layout from '../../layouts/Layout.astro';
+
+const teamConnection = await client.queries.teamConnection({ sort: 'order' });
+
+const teams = teamConnection.data.teamConnection.edges?.map((edge) => edge?.node) ?? [];
+
+const currentYear = new Date().getFullYear();
+const teamsThisYear = teams.filter((team) => new Date(team?.season ?? '').getFullYear() === currentYear);
+---
+
+<Layout>
+  <h1>Unsere Mannschaften für {currentYear}</h1>
+  {
+    !!teamsThisYear.length && (
+      <ul>
+        {teamsThisYear.map((team) => (
+          <li>
+            <a href={`/mannschaften/${team?.slug}`}>{team?.ageGroup}</a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {!teamsThisYear.length && <i class="block text-center">Die Mannschaften werden im Januar bis Februar gemeldet.</i>}
+</Layout>

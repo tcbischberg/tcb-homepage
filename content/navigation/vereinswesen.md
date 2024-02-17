@@ -8,7 +8,7 @@ sublink:
   - Anfahrt
 label: Vereinswesen
 link: /vereinswesen
-order: 2
+order: 3
 subpages:
   - label: Vorstand und Ansprechpersonen
     link: vorstand

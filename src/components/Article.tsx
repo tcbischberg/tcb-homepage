@@ -7,19 +7,21 @@ export default function Article(props: { query: string; variables: object; data:
   const { data } = useTina(props);
 
   return (
-    <article className="article">
-      <header>
-        <div className="text-center">{new Date(data.article.createdAt).toLocaleDateString('de')}</div>
-        <h2 id={data.article.slug ?? ''}>
-          <a href={data.article.slug ? '#' + data.article.slug : ''} className="no-underline">
-            {data.article.title}
-          </a>
-        </h2>
-      </header>
-      <main>
-        <TinaMarkdown content={data?.article?.body ?? { type: 'root', children: [] }} components={{ Carousel }} />
-      </main>
-      <hr />
-    </article>
+    <>
+      <article className="article">
+        <header>
+          <div className="text-center">{new Date(data.article.createdAt).toLocaleDateString('de')}</div>
+          <h2 id={data.article.slug ?? ''}>
+            <a href={data.article.slug ? '#' + data.article.slug : ''} className="no-underline">
+              {data.article.title}
+            </a>
+          </h2>
+        </header>
+        <main>
+          <TinaMarkdown content={data?.article?.body ?? { type: 'root', children: [] }} components={{ Carousel }} />
+        </main>
+      </article>
+      <hr className="hr" />
+    </>
   );
 }

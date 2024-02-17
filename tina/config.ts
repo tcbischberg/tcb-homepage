@@ -242,7 +242,7 @@ export default defineStaticConfig({
           filename: {
             readonly: true,
             slugify: (values) => {
-              return (values.season ?? '') + '_' + (values.ageGroup ?? '');
+              return (values.season ?? '') + '_' + (values.ageGroup ?? '').toLowerCase().replace(/ /g, '');
             },
           },
           beforeSubmit: async ({ values }: { form: Form; cms: TinaCMS; values: Record<string, any> }) => {
@@ -298,6 +298,11 @@ export default defineStaticConfig({
             type: 'string',
             name: 'phone',
             label: 'Telefon',
+          },
+          {
+            type: 'number',
+            name: 'order',
+            label: 'Reihenfolge',
           },
           {
             type: 'string',

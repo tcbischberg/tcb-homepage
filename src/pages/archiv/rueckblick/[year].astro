@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { client } from '../../../../tina/__generated__/client';
 import Layout from '../../../layouts/Layout.astro';
 import Article from '../../../components/Article';
+import TeamNews from '../../../components/TeamNews';
 
 export const getStaticPaths = (async () => {
   const response = await client.queries.articleConnection();
@@ -37,20 +38,42 @@ const articles = await Promise.all(
     .filter((node) => new Date(node?.createdAt ?? '').getFullYear() === year)
     .map((node) => client.queries.article({ relativePath: node?._sys.relativePath ?? '' })) ?? []
 );
+
+const teamConnection = await client.queries.teamConnection({
+  sort: 'order',
+});
+
+const teams = teamConnection.data.teamConnection.edges?.map((edge) => edge?.node) ?? [];
+const currentTeams = teams.filter((team) => new Date(team?.season ?? '').getFullYear() === year);
+// const sortedTeamsByOrder = currentTeams.sort((a, b) => (a?.order ?? Infinity) - (b?.order ?? Infinity));
+
+const teamsWithNews = await Promise.all(
+  currentTeams.map(async (team) => {
+    const teamNewsConnection = await client.queries.teamNewsConnection({
+      filter: { team: { team: { season: { eq: team?.season }, ageGroup: { eq: team?.ageGroup } } } },
+    });
+
+    const teamNews = teamNewsConnection.data.teamNewsConnection.edges?.map((edge) => edge?.node) ?? [];
+
+    return { ...team, news: teamNews };
+  })
+);
 ---
 
 <Layout
   ><h1>
-    Der TC Bischberg<ul class="menu menu-horizontal rounded-box text-5xl">
-      <li>
+    Der TC Bischberg<ul class="menu menu-horizontal rounded-box text-5xl !my-0 !px-0">
+      <li class="!my-0">
         <details>
           <summary>{year}</summary>
-          <ul>
+          <ul class="!px-0 !my-0 right-0">
             {
               availableYears.map((availableYear) => (
-                <li>
+                <li class="!p-0 !my-0">
                   <a
                     class:list={[
+                      'no-underline',
+                      'block',
                       'text-center',
                       year === availableYear && 'pointer-events-none',
                       year === availableYear && 'text-blue',
@@ -68,42 +91,53 @@ const articles = await Promise.all(
       </li>
     </ul>
   </h1>
+  {
+    !!teamsWithNews?.length && (
+      <>
+        <nav class="bg-secondary-content rounded-box w-fit m-auto">
+          <ul class="menu !p-4 text-xl">
+            <li class="!my-0">
+              <a class="!m-0 no-underline" href="#verein">
+                Vereinsnews
+              </a>
+            </li>
+            <li class="!my-0">
+              <a class="!m-0 no-underline" href="#mannschaften">
+                Mannschaftsnews
+              </a>
+              <ul class="!my-0 !ps-0">
+                {teamsWithNews.map((team) => (
+                  <li class="!my-0">
+                    <a class="!m-0 no-underline" href={`#mannschaften-${team.slug}`}>
+                      {team.ageGroup}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <h2 id="verein">Vereinsnews</h2>
+      </>
+    )
+  }
   {articles.map((article) => <Article client:tina {...article} />)}{
     !articles.length && (
       <div class="mt-4 text-center italic text-2xl">Dieses Jahr wurden noch keine Artikel veröffentlicht.</div>
     )
-  }</Layout
->
-
-<style is:global>
-  astro-island:last-of-type > .article > hr {
-    display: none;
   }
-</style>
-
-<style>
-  ul.menu {
-    padding-inline: 0;
-    margin-block: 0;
+  {!!teamsWithNews?.length && <h2 id="mannschaften">Mannschaftsnews</h2>}
+  {
+    teamsWithNews.map((team) => (
+      <div id={`mannschaften-${team.slug}`} class="collapse bg-primary-content mb-4 collapse-arrow">
+        <input type="radio" name="teams" />
+        <div class="collapse-title text-xl font-medium text-center">{team?.ageGroup}</div>
+        <div class="collapse-content">
+          {team?.news.map((news) => (
+            <TeamNews data={{ teamNews: news }} />
+          ))}
+        </div>
+      </div>
+    ))
   }
-
-  ul.menu > li {
-    margin-block: 0;
-  }
-
-  ul.menu ul {
-    padding-inline: 0;
-    margin-block: 0;
-    right: 0;
-  }
-
-  ul.menu ul > li {
-    margin-block: 0;
-    padding: 0;
-  }
-
-  ul.menu ul > li > a {
-    text-decoration: none;
-    display: block;
-  }
-</style>
+</Layout>

@@ -21,7 +21,6 @@ const years = [
   ),
 ].sort((a, b) => b - a);
 const currentYear = years[0];
-console.log('currentYear', currentYear);
 
 // https://astro.build/config
 export default defineConfig({

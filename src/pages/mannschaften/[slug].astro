@@ -8,7 +8,6 @@ export const getStaticPaths = (async () => {
   const response = await client.queries.teamConnection();
 
   const slugs = response.data.teamConnection.edges?.map((edge) => edge?.node?.slug ?? '') ?? [];
-  console.log(slugs);
 
   return slugs.map((slug) => ({
     params: {
@@ -42,11 +41,65 @@ const filteredNewsByYear = sortedNewsByCreatedAtDesc.filter((news) => {
   }
   return false;
 });
+
+const { ageGroup, league, contact, email, phone, training } = teamData ?? {};
 ---
 
 <Layout>
-  <h1>{teamData?.ageGroup}</h1>
-  <h2>Neuigkeiten</h2>
+  <h1>{ageGroup}</h1>
+  <div class="card bg-primary-content w-fit m-auto mb-8">
+    <div class="card-body w-fit py-0">
+      <table class="w-fit">
+        <tbody>
+          {
+            league && (
+              <tr>
+                <th class="!text-end">Liga</th>
+                <td class="text-start">{league}</td>
+              </tr>
+            )
+          }
+          {
+            contact && (
+              <tr>
+                <th class="!text-end">Ansprechperson</th>
+                <td class="text-start">{contact}</td>
+              </tr>
+            )
+          }
+          {
+            email && (
+              <tr>
+                <th class="!text-end">E-Mail</th>
+                <td class="text-start">
+                  <a href={`mailto:${email}`}>{email}</a>
+                </td>
+              </tr>
+            )
+          }
+          {
+            phone && (
+              <tr>
+                <th class="!text-end">Telefon</th>
+                <td class="text-start">
+                  <a href={`tel:${phone}`}>{phone}</a>
+                </td>
+              </tr>
+            )
+          }
+          {
+            training && (
+              <tr>
+                <th class="!text-end">Training</th>
+                <td class="text-start">{training}</td>
+              </tr>
+            )
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
   {filteredNewsByYear?.map((teamNews) => <TeamNews query="" variables={{}} data={{ teamNews }} />)}
   {!filteredNewsByYear?.length && <i>Noch keine Neuigkeiten für das Jahr {currentYear}</i>}
+  <p>Neuigkeiten aus vergangenen Jahren befinden sich im <a href="/archiv/rueckblick">Archiv</a>.</p>
 </Layout>
