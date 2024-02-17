@@ -100,6 +100,14 @@ const { ageGroup, league, contact, email, phone, training } = teamData ?? {};
     </div>
   </div>
   {filteredNewsByYear?.map((teamNews) => <TeamNews query="" variables={{}} data={{ teamNews }} />)}
-  {!filteredNewsByYear?.length && <i>Noch keine Neuigkeiten für das Jahr {currentYear}</i>}
-  <p>Neuigkeiten aus vergangenen Jahren befinden sich im <a href="/archiv/rueckblick">Archiv</a>.</p>
+  {!filteredNewsByYear?.length && <i class="block text-center">Noch keine Neuigkeiten für das Jahr {currentYear}</i>}
+  <p class="text-center">
+    Neuigkeiten aus vergangenen Jahren befinden sich im <a href="/archiv/rueckblick">Archiv</a>.
+  </p>
 </Layout>
+
+<style>
+  .card:not(:has(tr)) {
+    display: none;
+  }
+</style>

@@ -14,13 +14,17 @@ const teamsThisYear = teams.filter((team) => new Date(team?.season ?? '').getFul
   <h1>Unsere Mannschaften für {currentYear}</h1>
   {
     !!teamsThisYear.length && (
-      <ul>
-        {teamsThisYear.map((team) => (
-          <li>
-            <a href={`/mannschaften/${team?.slug}`}>{team?.ageGroup}</a>
-          </li>
-        ))}
-      </ul>
+      <nav class="bg-secondary-content rounded-box w-fit m-auto">
+        <ul class="menu !p-4 text-4xl">
+          {teamsThisYear.map((team) => (
+            <li class="">
+              <a class="!m-0 no-underline" href={`/mannschaften/${team?.slug}`}>
+                {team?.ageGroup}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     )
   }
   {!teamsThisYear.length && <i class="block text-center">Die Mannschaften werden im Januar bis Februar gemeldet.</i>}
