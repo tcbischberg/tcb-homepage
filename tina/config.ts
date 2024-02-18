@@ -28,8 +28,11 @@ export default defineStaticConfig({
           filename: {
             readonly: true,
             slugify: (values) => {
+              const createdAt = new Date(values.createdAt || new Date());
+              // WARN: This is a hack to fix the timezone issue between german time and UTC
+              createdAt.setHours(12);
               return (
-                new Date(values.createdAt || new Date()).toISOString().split('T')[0] +
+                createdAt.toISOString().split('T')[0] +
                 '_' +
                 (values.title ?? '')
                   .toLowerCase()
@@ -349,8 +352,11 @@ export default defineStaticConfig({
           filename: {
             readonly: true,
             slugify: (values) => {
+              const createdAt = new Date(values.createdAt || new Date());
+              // WARN: This is a hack to fix the timezone issue between german time and UTC
+              createdAt.setHours(12);
               return (
-                new Date(values.createdAt || new Date()).toISOString().split('T')[0] +
+                createdAt.toISOString().split('T')[0] +
                 '_' +
                 (values.title ?? '')
                   .toLowerCase()
