@@ -1,6 +1,7 @@
 ---
+import type { Code } from 'astro:components';
 import client from '../../../tina/__generated__/client';
-import Article from '../../components/Article';
+import Article from '../../components/Article.astro';
 import Layout from '../../layouts/Layout.astro';
 
 export const getStaticPaths = async () => {
@@ -26,5 +27,5 @@ const response = await client.queries.article({
 ---
 
 <Layout>
- <Article client:tina {...response} />
+  <Article {...response} />
 </Layout>

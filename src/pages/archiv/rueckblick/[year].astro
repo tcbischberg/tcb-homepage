@@ -2,7 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { client } from '../../../../tina/__generated__/client';
 import Layout from '../../../layouts/Layout.astro';
-import Article from '../../../components/Article';
+import Article from '../../../components/Article.astro';
 import TeamNews from '../../../components/TeamNews';
 
 export const getStaticPaths = (async () => {
@@ -121,7 +121,7 @@ const teamsWithNews = await Promise.all(
       </>
     )
   }
-  {articles.map((article) => <Article client:tina {...article} />)}{
+  {articles.map((article) => <Article {...article} />)}{
     !articles.length && (
       <div class="mt-4 text-center italic text-2xl">Dieses Jahr wurden noch keine Artikel veröffentlicht.</div>
     )

@@ -7,9 +7,9 @@ export default function Carousel(props: { images?: string[] }) {
       >
         {props.images?.map((image, index) => (
           <img
-            className="block !rounded-none snap-start snap-normal max-w-[95%] !me-2 lg:max-h-[80vh]"
+            className="block !rounded-none snap-start snap-normal max-w-[95%] !me-2 lg:max-h-[80vh] top-[50%] [translate:0_-50%]"
             src={image}
-            alt={`Image ${index}`}
+            alt={`Bild ${index}`}
             key={index}
           />
         ))}

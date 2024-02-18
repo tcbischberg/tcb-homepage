@@ -1,6 +1,6 @@
 ---
 import client from '../../tina/__generated__/client';
-import Article from '../components/Article';
+import Article from '../components/Article.astro';
 import Layout from '../layouts/Layout.astro';
 
 const articleConnection = await client.queries.articleConnection({
@@ -15,8 +15,9 @@ const articles = await Promise.all(
 );
 ---
 
-<Layout
-  >{articles.map((article) => <Article client:tina {...article} />)}<div class="mt-4 text-center italic text-2xl">
+<Layout>
+  {articles.map((article) => <Article client:load {...article} />)}
+  <div class="mt-4 text-center italic text-2xl">
     Die vollständige Liste unserer Artikel befindet sich in den <a href="/archiv/rueckblick">Jahresrückblicken</a>.
-  </div></Layout
->
+  </div>
+</Layout>

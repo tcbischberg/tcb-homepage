@@ -302,7 +302,7 @@ export default defineStaticConfig({
             label: 'Saison',
             ui: {
               dateFormat: 'YYYY',
-              parse: (value) => value && value.format('YYYY'),
+              parse: (value) => value?.format?.('YYYY'),
             },
             required: true,
           },

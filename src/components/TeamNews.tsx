@@ -21,7 +21,7 @@ export default function TeamNews(props: { query: string; variables: object; data
           <TinaMarkdown content={data?.teamNews?.body ?? { type: 'root', children: [] }} components={{ Carousel }} />
         </main>
       </article>
-      <hr className="hr" />
+      <hr />
     </>
   );
 }
