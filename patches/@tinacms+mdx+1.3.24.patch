@@ -1,8 +1,14 @@
 diff --git a/node_modules/@tinacms/mdx/dist/index.browser.mjs b/node_modules/@tinacms/mdx/dist/index.browser.mjs
-index ee1caec..6e09d23 100644
+index 66e033f..e05897d 100644
 --- a/node_modules/@tinacms/mdx/dist/index.browser.mjs
 +++ b/node_modules/@tinacms/mdx/dist/index.browser.mjs
-@@ -46637,7 +46637,7 @@ var extractAttribute = (attribute, field, imageCallback) => {
+@@ -46692,12 +46692,13 @@ var extractAttribute = (attribute, field, imageCallback) => {
+         return extractString(attribute, field);
+       }
+     case "image":
++      console.log({attribute, field, exp: extractExpression(attribute)})
+       if (field.list) {
+         const values2 = extractScalar(
            extractExpression(attribute),
            field
          );
@@ -12,10 +18,10 @@ index ee1caec..6e09d23 100644
          const value = extractString(attribute, field);
          return imageCallback(value);
 diff --git a/node_modules/@tinacms/mdx/dist/index.js b/node_modules/@tinacms/mdx/dist/index.js
-index 558bd9b..5310802 100644
+index 84ab8ba..523e49d 100644
 --- a/node_modules/@tinacms/mdx/dist/index.js
 +++ b/node_modules/@tinacms/mdx/dist/index.js
-@@ -48534,7 +48534,8 @@ var extractAttribute = (attribute, field, imageCallback) => {
+@@ -48594,7 +48594,7 @@ var extractAttribute = (attribute, field, imageCallback) => {
            extractExpression(attribute),
            field
          );
@@ -25,10 +31,10 @@ index 558bd9b..5310802 100644
          const value = extractString(attribute, field);
          return imageCallback(value);
 diff --git a/node_modules/@tinacms/mdx/dist/index.mjs b/node_modules/@tinacms/mdx/dist/index.mjs
-index c2ccbc7..57905ee 100644
+index bd538cd..24c0e04 100644
 --- a/node_modules/@tinacms/mdx/dist/index.mjs
 +++ b/node_modules/@tinacms/mdx/dist/index.mjs
-@@ -48509,7 +48509,7 @@ var extractAttribute = (attribute, field, imageCallback) => {
+@@ -48569,7 +48569,7 @@ var extractAttribute = (attribute, field, imageCallback) => {
            extractExpression(attribute),
            field
          );

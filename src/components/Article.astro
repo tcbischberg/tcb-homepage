@@ -12,7 +12,6 @@ export type Props = {
 const { data } = Astro.props;
 
 const isPublicArticle = !data.article._sys.relativePath.startsWith('intern/');
-console.log('isPublicArticle', isPublicArticle, data.article._sys.relativePath);
 ---
 
 {isPublicArticle && <ArticleComponent client:tina {...Astro.props} />}
