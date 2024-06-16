@@ -1,6 +1,7 @@
 ---
 import client from '../../tina/__generated__/client';
 import Article from '../components/Article.astro';
+import { shouldShowInternalArticles } from '../helper';
 import Layout from '../layouts/Layout.astro';
 
 const articleConnection = await client.queries.articleConnection({
@@ -11,12 +12,13 @@ const articleConnection = await client.queries.articleConnection({
 const articles = await Promise.all(
   articleConnection.data.articleConnection.edges
     ?.map((edge) => edge?.node)
+    .filter((node) => (shouldShowInternalArticles ? true : !node?.internal))
     .map((node) => client.queries.article({ relativePath: node?._sys.relativePath ?? '' })) ?? []
 );
 ---
 
 <Layout>
-  {articles.map((article) => <Article client:load {...article} />)}
+  {articles.map((article) => <Article {...article} />)}
   <div class="mt-4 text-center italic text-2xl">
     Die vollständige Liste unserer Artikel befindet sich in den <a href="/archiv/rueckblick">Jahresrückblicken</a>.
   </div>

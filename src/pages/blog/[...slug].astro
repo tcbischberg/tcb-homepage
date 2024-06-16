@@ -1,8 +1,8 @@
 ---
-import type { Code } from 'astro:components';
 import client from '../../../tina/__generated__/client';
 import Article from '../../components/Article.astro';
 import Layout from '../../layouts/Layout.astro';
+import { shouldShowInternalArticles } from '../../helper';
 
 export const getStaticPaths = async () => {
   const response = await client.queries.articleConnection();
@@ -24,6 +24,12 @@ const { slug } = Astro.params;
 const response = await client.queries.article({
   relativePath: `${slug}.mdx`,
 });
+
+const shouldRedirect = shouldShowInternalArticles ? false : response.data.article.internal;
+
+if (shouldRedirect) {
+  return Astro.redirect(`/login?${new URLSearchParams({ redirect: Astro.url.href }).toString()}`);
+}
 ---
 
 <Layout>

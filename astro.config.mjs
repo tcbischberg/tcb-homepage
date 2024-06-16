@@ -2,30 +2,34 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import client from './tina/__generated__/client';
-const tina = ({ directiveName = 'tina' } = {}) => ({
+
+const tina = ({
+  directiveName = 'tina'
+} = {}) => ({
   name: 'tina-cms',
   hooks: {
-    'astro:config:setup': ({ addClientDirective }) => {
+    'astro:config:setup': ({
+      addClientDirective
+    }) => {
       addClientDirective({
         name: directiveName,
-        entrypoint: './client-directives/tina.mjs',
+        entrypoint: './client-directives/tina.mjs'
       });
-    },
-  },
+    }
+  }
 });
-
 const response = await client.queries.articleConnection();
-const years = [
-  ...new Set(
-    response.data.articleConnection.edges?.map((edge) => new Date(edge?.node?.createdAt ?? '').getFullYear()) ?? []
-  ),
-].sort((a, b) => b - a);
+const years = [...new Set(response.data.articleConnection.edges?.map(edge => new Date(edge?.node?.createdAt ?? '').getFullYear()) ?? [])].sort((a, b) => b - a);
 const currentYear = years[0];
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'static',
   integrations: [react(), tina(), tailwind()],
   redirects: {
-    '/archiv/rueckblick': { destination: `/archiv/rueckblick/${currentYear}`, status: 302 },
-  },
+    '/archiv/rueckblick': {
+      destination: `/archiv/rueckblick/${currentYear}`,
+      status: 302
+    }
+  }
 });

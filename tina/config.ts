@@ -93,6 +93,13 @@ export default defineStaticConfig({
             ],
           },
           {
+            type: 'boolean',
+            name: 'internal',
+            label: 'Intern',
+            required: false,
+            description: 'Soll nur für Mitglieder sichtbar sein',
+          },
+          {
             type: 'string',
             name: 'slug',
             label: 'Slug',

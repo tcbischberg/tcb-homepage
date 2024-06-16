@@ -1,18 +1,12 @@
 ---
 import ArticleComponent from './Article';
-import InternalArticle from './InternalArticle';
-import { ArticleQuery } from '../../tina/__generated__/types';
+import type { ArticleQuery } from '../../tina/__generated__/types';
 
 export type Props = {
   data: ArticleQuery;
   variables: object;
   query: string;
 };
-
-const { data } = Astro.props;
-
-const isPublicArticle = !data.article._sys.relativePath.startsWith('intern/');
 ---
 
-{isPublicArticle && <ArticleComponent client:tina {...Astro.props} />}
-{!isPublicArticle && <InternalArticle client:load {...Astro.props} />}
+<ArticleComponent client:tina {...Astro.props} />
